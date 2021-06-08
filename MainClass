@@ -1,0 +1,344 @@
+class MainClass {
+
+    fun main(args: Array<String>){
+        val deudaEnee : Enee = Enee()
+        deudaEnee.setMonto(231.02)
+        deudaEnee.setWatts(296)
+        val deudaSanaa :Sanaa = Sanaa()
+        deudaSanaa.setMonto(500.00)
+        val cliente : Cliente = Cliente()
+        val clienteRecargas: Cliente = Cliente()
+        cliente.setDinero(2.2)
+        cliente.setId(80120007816)
+        cliente.setNombre("Willo")
+        cliente.setPhone(94648122)
+        val recargasTigo: Tigo = Tigo()
+        val recargasClaro: Claro = Claro()
+
+        do {
+            println(
+                "Menu de Opciones\n" +
+                        "1.Cobro Enee\n2.Cobro Sanaa\n3.recarga Tigo\n4.Recarga Claro" +
+                        "\n5.Acreditar a cuenta\n6.Debitar\n0.Salir\n"
+            )
+            var eleccion: Int
+            eleccion = readLine().toString().toInt()
+
+            fun cases(opcion: Int) {
+                when (opcion) {
+                    1 -> {
+                        println("**Enee**")
+                        println("Factura de ${cliente.getNombre()}")
+                        println("Con numero de telefono ${cliente.getPhone()}")
+                        println("Numero de indentidad ${cliente.getId()}")
+                        println("Watts consumidos ${deudaEnee.getWatts()}")
+
+                        if (deudaEnee.facturar(deudaEnee.getMonto(), cliente.getDinero()) == true ){
+                            cliente.setDinero(cliente.getDinero()-deudaEnee.getMonto())
+                            println("\nDinero restante en su cuenta ${cliente.getDinero()}\n")
+                        }else {
+                            println("\nSaldo actual : ${cliente.getDinero()}\n")
+                        }
+
+
+                    }
+                    2 -> {
+                        println("**Sanaa**")
+                        println("Factura de ${cliente.getNombre()}")
+                        println("Con numero de telefono ${cliente.getPhone()}")
+                        println("Numero de indentidad ${cliente.getId()}")
+
+                        if (deudaSanaa.facturar(deudaSanaa.getMonto(), cliente.getDinero()) == true ){
+                            cliente.setDinero(cliente.getDinero()-deudaSanaa.getMonto())
+                            println("\nDinero restante en su cuenta ${cliente.getDinero()}\n")
+                        }else {
+                            println("\nSaldo actual : ${cliente.getDinero()}\n")
+                        }
+                    }
+                    3 -> {
+                        println("**Recarga Tigo**")
+                        println("Digite su numero telefonico")
+                        clienteRecargas.setPhone(readLine().toString().toLong())
+                        var recarga: Double
+                        recarga = recargasTigo.getValorRecarga()
+                        if(cliente.getDinero()>=recarga){
+                            println("La recarga se realizo correctamente al numero ${clienteRecargas.getPhone()}")
+                            cliente.setDinero(cliente.getDinero()-recarga)
+                        }else {
+                            println("La recarga no se puede hacer por dinero insuficiente")
+                        }
+
+                        println("Despues del pago${cliente.getDinero()}")
+                    }
+                    4 -> {
+                        println("\n**Recarga Claro**\n")
+                        println("Digite su numero telefonico")
+                        clienteRecargas.setPhone(readLine().toString().toLong())
+                        var recarga: Double
+                        recarga = recargasClaro.getValorRecarga()
+                        if(cliente.getDinero()>=recarga){
+                            println("La recarga se realizo correctamente al numero ${clienteRecargas.getPhone()}")
+                            cliente.setDinero(cliente.getDinero()-recarga)
+                        }else {
+                            println("La recarga no se puede hacer por dinero insuficiente")
+                        }
+
+                        println("Despues del pago${cliente.getDinero()}")
+
+                    }
+                    5 -> {
+                        println("**Acreditar**")
+                        println("Saldo Actual es : ${cliente.getDinero()}")
+                        var monto: Double
+                        println("Cuanto desearia acreditar a la cuenta ?")
+                        monto = readLine().toString().toDouble()
+                        cliente.acreditar(monto)
+                        println("Saldo en la cuenta : ${cliente.getDinero()}")
+                    }
+                    6-> {
+                        println("**Debitar**")
+                        println("Dinero antes del debito ${cliente.getDinero()}")
+                        var monto: Double
+                        monto = readLine().toString().toDouble()
+                        cliente.debitar(monto)
+                        println("Dinero en la cuenta ${cliente.getDinero()}")
+                    }
+                    0-> {
+                        println("Fue Un gusto servirle")
+                    }
+                    else -> println ("No lo se")
+                }
+
+            }
+            cases(eleccion)
+        }while (eleccion != 0 )
+    }
+
+
+}
+MainClass().main(arrayOf(""))
+class Enee {
+    private var montoAPagar: Double = 0.0
+    private var watts : Int = 0
+
+    fun setMonto (monto:Double ){
+        this.montoAPagar = monto
+    }
+    fun setWatts(watts:Int){
+        this.watts = watts
+    }
+    fun getWatts ():Int{
+        return watts
+    }
+    fun getMonto():Double {
+        return montoAPagar
+    }
+
+    fun facturar(valor: Double, dinero1: Double):Boolean{
+        var total = valor
+        println("El monto a pagar es:$total")
+        if (dinero1>total){
+            println("Pago Realizado con Exito ")
+            return true
+            //Falta Restarle a la Cuenta el MontoAPagar
+        }else{
+            println("Saldo insuficiente para Realizar esta Operacion")
+            return false
+        }
+    }
+
+}
+class Sanaa {
+    private var montoAPagar: Double = 0.0
+
+    fun setMonto (monto:Double ){
+        this.montoAPagar = monto
+    }
+    fun getMonto():Double {
+        return montoAPagar
+    }
+
+    fun facturar(valor: Double, dinero1: Double):Boolean{
+        var total = valor
+        println("El monto a pagar es:$total")
+        if (dinero1>total){
+            println("Pago Realizado con Exito ")
+            return true
+            //Falta Restarle a la Cuenta el MontoAPagar
+        }else{
+            println("Saldo insuficiente para Realizar esta Operacion")
+            return false
+        }
+    }
+
+}
+
+class  Cliente {
+    private var nombre: String = ""
+    private var id: Long = 0
+    private var phone: Long = 0
+    private var dinero: Double = 0.0
+
+    fun setNombre(nombre: String) {
+        this.nombre = nombre
+    }
+
+    fun setId(identificaction: Long) {
+        this.id = identificaction
+    }
+
+    fun setPhone(phone: Long) {
+        this.phone = phone
+    }
+
+    fun setDinero(credito: Double) {
+        this.dinero = credito
+    }
+
+    fun getDinero(): Double {
+        return dinero
+    }
+
+    fun getNombre(): String {
+        return nombre
+    }
+
+    fun getPhone(): Long {
+        return phone
+    }
+
+    fun getId(): Long {
+        return id
+    }
+
+    fun acreditar(monto: Double) {
+        if (monto < 0) {
+            println("no se puede ")
+        } else if (monto > 10000) {
+            println("No puede ser mayor a 10000")
+        } else {
+            println("credito realizado correctamente")
+            dinero = dinero + monto
+        }
+
+    }
+    fun debitar(debito:Double ){
+        if (debito< 0 ){
+            println("No se puede debitar menos de 0 lempiras")
+        }else if (debito >10000 ){
+            println("No puedes debitar mas de 10000 lempiras")
+        }else if (debito> dinero){
+            println("No tiene dinero suficiente para debitar esa cantidad")
+        }else{
+            println("El debito se ha realizado correctamente")
+            dinero = dinero - debito
+        }
+    }
+}
+class Tigo {
+    val recargaNormal25Lps = 25.00
+    val recargaNormal10Lps = 10.00
+    val recargaNormal50Lps = 50.00
+    val superRecarga1Dia = 25.00
+    val superRecarga5Dias = 50.00
+    val superRecarga7Dias = 100.00
+    val paquetigo = 100.00
+    val internet = 25.00
+    val interne2G = 75.00
+    val internet5G = 110.00
+
+    constructor() {
+
+    }
+
+    fun getValorRecarga(): Double {
+        println("1.Normal\n2.Super Recarga\n3. paquetigo 24 horas \n4.Internet\n")
+        var opcion = readLine().toString().toInt()
+        when (opcion) {
+            1 -> {
+                println("Que precio ?\n1.10 lps \n2.25 lps\n3.50 lps")
+                var opcion = readLine().toString().toInt()
+                when (opcion) {
+                    1 -> return recargaNormal10Lps
+                    2 -> return recargaNormal25Lps
+                    3 -> return recargaNormal50Lps
+                    else -> return 0.0
+                }
+            }
+            2 -> {
+                println("Que super recarga?\n1. un dia 25lps\n2.cinco dias 50lps\n3.siete dias 100lps")
+                var opcion = readLine().toString().toInt()
+                when (opcion) {
+                    1 -> return superRecarga1Dia
+                    2 -> return superRecarga5Dias
+                    3 -> return superRecarga7Dias
+                    else -> return 0.0
+                }
+            }
+            3 -> return paquetigo
+            4 -> {
+                println("Que paquete de internet?\n1.internet 500megas 25lps\n2.internet 2G 75lps\n3.internet 5G 110 lps")
+                var opcion = readLine().toString().toInt()
+                when (opcion) {
+                    1 -> return internet
+                    2 -> return  interne2G
+                    3 -> return  internet5G
+                    else -> return 0.0
+                }
+            }
+            else -> return 0.0
+
+
+        }
+
+    }
+}
+class Claro {
+    val recargaNormal = 25.00
+    val superRecarga1Dia = 25.00
+    val superRecarga5Dias = 50.00
+    val superRecarga7Dias = 100.00
+    val internet = 25.00
+    val interne2G = 75.00
+    val internet5G = 110.00
+    constructor() {
+
+    }
+
+    fun getValorRecarga(): Double {
+        println("1.Normal\n2.Super Recarga\n3.Internet\n")
+        var opcion = readLine().toString().toInt()
+        return when (opcion) {
+            1 -> {
+                return recargaNormal
+
+            }
+            2 -> {
+                println("Que super recarga?\n1. un dia 25lps\n2.cinco dias 50lps\n3.siete dias 100lps")
+                var opcion = readLine().toString().toInt()
+                when (opcion) {
+                    1 -> return superRecarga1Dia
+                    2 -> return superRecarga5Dias
+                    3 -> return superRecarga7Dias
+                    else -> return 0.0
+                }
+            }
+            3 -> {
+                println("Que paquete de internet?\n1.internet 500megas 25lps\n2.internet 2G 75lps\n3.internet 5G 110 lps")
+                var opcion = readLine().toString().toInt()
+                when (opcion) {
+                    1 -> return internet
+                    2 -> return  interne2G
+                    3 -> return  internet5G
+                    else -> return 0.0
+                }
+            }
+            else -> return 0.0
+
+
+        }
+
+    }
+
+
+}
